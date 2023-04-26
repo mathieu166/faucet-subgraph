@@ -1,27 +1,42 @@
-specVersion: 0.0.2
-description: Gravatar for Ethereum
-repository: https://github.com/graphprotocol/example-subgraph
+specVersion: 0.0.4
+description: A BSC subgraph for tracking transactions and events
+repository: https://github.com/mathieu166/faucet-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: Gravity
-    network: mainnet
+    name: Faucet
+    network: bsc
     source:
-      address: '0x2E645469f354BB4F5c8a05B3b30A929361cf77eC'
-      abi: Gravity
+      address: "0xFFE811714ab35360b67eE195acE7C10D93f89D8C"
+      abi: Faucet
+      startBlock: 6792674
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - Gravatar
+        - Transaction
+        - Upline
+        - NewDeposit
+        - DirectPayout
+        - MatchPayout
+        - Withdraw
+        - NewAirdrop
       abis:
-        - name: Gravity
-          file: ./abis/Gravity.json
+        - name: Faucet
+          file: ./abis/Faucet.json
       eventHandlers:
-        - event: NewGravatar(uint256,address,string,string)
-          handler: handleNewGravatar
-        - event: UpdatedGravatar(uint256,address,string,string)
-          handler: handleUpdatedGravatar
-      file: ./src/mapping.ts
+        - event: Upline(indexed address,indexed address)
+          handler: handleUpline
+        - event: NewDeposit(indexed address,uint256)
+          handler: handleNewDeposit
+        - event: DirectPayout(indexed address,indexed address,uint256)
+          handler: handleDirectPayout
+        - event: MatchPayout(indexed address,indexed address,uint256)
+          handler: handleMatchPayout
+        - event: Withdraw(indexed address,uint256)
+          handler: handleWithdraw
+        - event: NewAirdrop(indexed address,indexed address,uint256,uint256)
+          handler: handleNewAirdrop
+      file: ./src/mappings.ts

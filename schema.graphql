@@ -1,6 +1,56 @@
-type Gravatar @entity {
+type Transaction @entity {
   id: ID!
-  owner: Bytes!
-  displayName: String!
-  imageUrl: String!
+  blockNumber: BigInt!
+  uplines: [Upline!]! @derivedFrom(field: "transaction")
+  deposits: [NewDeposit!]! @derivedFrom(field: "transaction")
+  directPayouts: [DirectPayout!]! @derivedFrom(field: "transaction")
+  matchPayouts: [MatchPayout!]! @derivedFrom(field: "transaction")
+  withdraws: [Withdraw!]! @derivedFrom(field: "transaction")
+  airdrops: [NewAirdrop!]! @derivedFrom(field: "transaction")
+}
+
+type Upline @entity {
+  id: ID!
+  transaction: Transaction!
+  user: Bytes!
+  upline: Bytes!
+}
+
+type NewDeposit @entity {
+  id: ID!
+  transaction: Transaction!
+  user: Bytes!
+  amount: BigInt!
+}
+
+type DirectPayout @entity {
+  id: ID!
+  transaction: Transaction!
+  user: Bytes!
+  from: Bytes!
+  amount: BigInt!
+}
+
+type MatchPayout @entity {
+  id: ID!
+  transaction: Transaction!
+  user: Bytes!
+  from: Bytes!
+  amount: BigInt!
+}
+
+type Withdraw @entity {
+  id: ID!
+  transaction: Transaction!
+  user: Bytes!
+  amount: BigInt!
+}
+
+type NewAirdrop @entity {
+  id: ID!
+  transaction: Transaction!
+  from: Bytes!
+  to: Bytes!
+  amount: BigInt!
+  timestamp: BigInt!
 }
